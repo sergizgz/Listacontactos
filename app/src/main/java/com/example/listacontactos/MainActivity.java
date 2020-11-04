@@ -4,15 +4,19 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
+import android.widget.TwoLineListItem;
 
 public class MainActivity extends AppCompatActivity {
     ListView lista;
@@ -29,11 +33,30 @@ public class MainActivity extends AppCompatActivity {
         //declaro las propiedades que quiero mostrar
         String[] from = {ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME, ContactsContract.CommonDataKinds.Phone.NUMBER};
         //declaro en que textviews muestro la informacion
-        int[] to = {android.R.id.text1, android.R.id.text2};
+        int[] to = {android.R.id.text1};
         //creo el adaptador con los datos
-        SimpleCursorAdapter adapter = new SimpleCursorAdapter(this, android.R.layout.simple_list_item_2, cursor, from, to);
+        SimpleCursorAdapter adapter = new SimpleCursorAdapter(this, android.R.layout.simple_list_item_1, cursor, from, to);
         //inserto el adaptador en la lista
         lista.setAdapter(adapter);
+
+        lista.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent i=new Intent(getApplicationContext(),MuestroContacto.class);
+                i.putExtra("contacto",((TextView)view).getText().toString());
+                startActivity(i);
+            }
+        });
+
+
+
+
+
+
+
+
+
+
 
 
 
