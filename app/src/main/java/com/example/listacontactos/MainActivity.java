@@ -41,7 +41,7 @@ TextView texto;
 
 
 
-            String stringContactName = "INVALID";
+            String stringContactName = "INVALIDO";
             if (cursor != null){
                 if (cursor.moveToFirst()){
                     stringContactName = cursor.getString(1);
