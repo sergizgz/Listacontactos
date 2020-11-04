@@ -10,50 +10,36 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.view.View;
+import android.widget.ListView;
+import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
-TextView texto;
+    ListView lista;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        texto=findViewById(R.id.texto);
-        texto.setText(String.valueOf("Hola"));
-        getNameButton();
+        lista=findViewById(R.id.lista);
+
+        //pido permisos <uses-permission android:name="android.permission.READ_CONTACTS"/>
+        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_CONTACTS, Manifest.permission.READ_CONTACTS}, PackageManager.PERMISSION_GRANTED);
+        //hago consulta de contactos
+        Cursor cursor = getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null, null, null, null);
+        //declaro las propiedades que quiero mostrar
+        String[] from = {ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME, ContactsContract.CommonDataKinds.Phone.NUMBER};
+        //declaro en que textviews muestro la informacion
+        int[] to = {android.R.id.text1, android.R.id.text2};
+        //creo el adaptador con los datos
+        SimpleCursorAdapter adapter = new SimpleCursorAdapter(this, android.R.layout.simple_list_item_2, cursor, from, to);
+        //inserto el adaptador en la lista
+        lista.setAdapter(adapter);
+
+
+
     }
 
 
-    public void getNameButton(){
-        try {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_CONTACTS, Manifest.permission.READ_CONTACTS}, PackageManager.PERMISSION_GRANTED);
 
-
-           // Cursor cursor = getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, new String[]{ContactsContract.PhoneLookup.DISPLAY_NAME}, null, null, null);
-
-
-            String[] atributos = new String[]{ContactsContract.Contacts._ID, ContactsContract.Data.DISPLAY_NAME, ContactsContract.CommonDataKinds.Phone.NUMBER, ContactsContract.CommonDataKinds.Phone.PHOTO_URI};
-
-
-
-            Cursor cursor = getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, atributos, null, null,
-                    null);
-
-
-
-            String stringContactName = "INVALIDO2";
-            if (cursor != null){
-                if (cursor.moveToFirst()){
-                    stringContactName = cursor.getString(1);
-                }
-            }
-            texto.setText(stringContactName);
-
-
-        }
-        catch (Exception e){
-            e.printStackTrace();
-        }
-    }
 
 }
